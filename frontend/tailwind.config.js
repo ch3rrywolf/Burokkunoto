@@ -5,7 +5,11 @@ content: [
   './index.html',
 ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        secondary: "#EF863E",
+      },
+    },
   },
   plugins: [],
 }
