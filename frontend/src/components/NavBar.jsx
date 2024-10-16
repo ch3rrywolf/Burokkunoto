@@ -21,8 +21,8 @@ const NavBar = () => {
   return (
     <div className="bg-white flex items-center justify-between px-6 py-2 drop-shadow">
       <h2 className="text-xl font-medium text-black">
-        <span className="text-red-200">Burokkun</span>
-        <span className="text-red-200">ōto</span>
+        <span className="text-red-600">Burokkun</span>
+        <span className="text-red-600">ōto</span>
       </h2>
 
       <SearchBar
