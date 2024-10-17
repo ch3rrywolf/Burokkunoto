@@ -31,7 +31,7 @@ const Login = () => {
     <div className="flex items-center justify-center mt-28">
       <div className="w-96 border rounded-full bg-red-600 px-7 py-10">
         <form onSubmit={handleLogin}>
-          <h4 className="text-2xl mb-7 text-white ">Login</h4>
+          <h4 className="text-2xl mb-7 px-32 py-5 text-white ">Login</h4>
           <input 
             type="text" 
             placeholder="Email" 
