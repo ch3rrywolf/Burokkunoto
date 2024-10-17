@@ -1,5 +1,5 @@
-import User from "../models/user.model";
-import { errorHandler } from "../utils/error";
+import User from "../models/user.model.js";
+import { errorHandler } from "../utils/error.js";
 import bcryptjs from "bcryptjs"
 
 export const signup = async (req, res, next) => {
