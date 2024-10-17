@@ -4,7 +4,7 @@ import ProfileInfo from './Cards/ProfileInfo'
 import { useNavigate } from "react-router-dom"
 import { Link } from 'react-router-dom'
 
-const NavBar = () => {
+const NavBar = ({userInfo}) => {
     const [searchQuery, setSearchQuery] = useState("")
 
     const navigate = useNavigate()
@@ -34,7 +34,7 @@ const NavBar = () => {
         handleSearch={handleSearch}
         onClearSearch={onClearSearch} />
 
-      <ProfileInfo onLogout={onLogout}/>
+      <ProfileInfo userInfo={userInfo} onLogout={onLogout}/>
     </div>
   )
 }
