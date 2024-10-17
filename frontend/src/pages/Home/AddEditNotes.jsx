@@ -57,16 +57,17 @@ const AddEditNotes = ({ onClose, noteData, type }) => {
                 placeholder="Content..."
                 rows={10}
                 value={content}
-                onChange={({ target }) => setTitle(target.value)}
-            >
-                {" "}
-            </textarea>
-        </div>mt-3
-        <div className="">
-            <label className="input-label text-red-400 uppercase">tags</label>
-            <TagInput />
+                onChange={({ target }) => setContent(target.value)}
+            />
         </div>
-        <button className="btn-[#2B85FF] font-medium mt-5 p-3"
+        <div className="mt-3">
+            <label className="input-label text-red-400 uppercase">tags</label>
+            <TagInput tags={tags} setTags={setTags} />
+        </div>
+
+        {error && <p className="text-red-500 text-xs pt-4">{error}</p>}
+
+        <button className="btn-primary font-medium mt-5 p-3"
         onClick={handleAddNote}
         >
             ADD
