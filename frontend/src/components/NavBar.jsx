@@ -3,20 +3,40 @@ import SearchBar from './SerachBar/SearchBar'
 import ProfileInfo from './Cards/ProfileInfo'
 import { useNavigate } from "react-router-dom"
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { signInSuccess, signoutFailure, signoutStart } from '../redux/user/userSlice'
+import axios from 'axios'
 
 const NavBar = ({userInfo}) => {
     const [searchQuery, setSearchQuery] = useState("")
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const handleSearch = () => {}
+
     const onClearSearch = () => {
       setSearchQuery("")
     }
 
-    const onLogout = () => {
-      navigate("/login")
+    const onLogout = async () => {
+      try {
+        dispatch(signoutStart())
 
+        const res = await axios.get("http://localhost:3000/api/auth/signout", {
+          withCredentials: true,
+        })
+
+        if(res.data.success === false) {
+          dispatch(signoutFailure(res.data.message))
+          return
+        }
+
+        dispatch(signInSuccess())
+        navigate("/login")
+      } catch (error) {
+        dispatch(signoutFailure(error.message))
+      }
     }
     
   return (

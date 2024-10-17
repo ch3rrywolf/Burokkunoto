@@ -23,12 +23,12 @@ const Home = () => {
   })
 
   useEffect(() => {
-    if (currentUser === null) {
+    if (currentUser === null || !currentUser) {
       navigate("/login")
     } else {
       setUserInfo(currentUser?.rest)
     }
-  })
+  }, [])
   return (
     
     <>
