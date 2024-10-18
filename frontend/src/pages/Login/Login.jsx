@@ -5,6 +5,7 @@ import { validateEmail } from '../../utils/helper'
 import { useDispatch } from 'react-redux'
 import { signInFailure, signInStart, signInSuccess } from '../../redux/user/userSlice'
 import axios from "axios"
+import { toast } from 'react-toastify'
 
 const Login = () => {
   const [email, setEmail] = useState("")
@@ -41,15 +42,18 @@ const Login = () => {
       )
 
       if(res.data.success === false) {
+        toast.error(res.data.message)
         console.log(res.data);
         dispatch(signInFailure(data.message))
       }
 
+      toast.success(res.data.message)
       dispatch(signInSuccess(res.data))
       navigate("/")
 
     } catch (error) {
-      console.log(error);
+      console.log(error)
+      toast.error(error.message)
       dispatch(signInFailure(error.message))
     }
   }

@@ -7,6 +7,8 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import NavBar from "../../components/NavBar"
 import axios from 'axios'
+import { toast } from 'react-toastify'
+import EmptyCard from '../../components/EmptyCard/EmptyCard'
 
 const Home = () => {
   const { currentUser, loading, errorDispatch } = useSelector(
@@ -15,6 +17,8 @@ const Home = () => {
 
   const [userInfo, setUserInfo] = useState(null)
   const [allNotes, setAllNotes] = useState([])
+
+  const [isSearch, setIsSearch] = useState(false)
 
   const navigate = useNavigate()
 
@@ -51,29 +55,109 @@ const Home = () => {
     }
   }
 
+  const handleEdit = (noteDetails) => {
+    setOpenAddEditModal({isShown: true, data: noteDetails, type: "edit"})
+  }
+
+  const deleteNote = async(data) => {
+    const noteId = data._id
+
+    try {
+      const res = await axios.delete(
+        "http://localhost:3000/api/note/delete/" + noteId,
+        {withCredentials: true}
+      )
+
+      if(res.data.success === false) {
+        toast.error(res.data.message)
+      }
+
+      toast.success(res.data.message)
+      getAllNotes()
+
+    } catch (error) {
+      toast(error.message)
+    }
+  }
+
+  const onSearchNote = async (query) => {
+    try {
+      const res = await axios.get("http://localhost:3000/api/note/search",
+        {params: {query}, withCredentials: true}
+      )
+
+      if(res.data.success === false){
+        console.log(res.data.message)
+        toast.error(res.data.message)
+        return
+      }
+
+      setIsSearch(true)
+      setAllNotes(res.data.notes)
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+  const handleClearSearch =  () => {
+    setIsSearch(false)
+    getAllNotes()
+  }
+
+  const updateIsPinned = async(noteData) => {
+    const noteId = noteData._id
+
+    try {
+      const res = await axios.put(
+        "http://localhost:3000/api/note/update-note-pinned/" + noteId,
+        {isPinned: !noteData.isPinned}, {withCredentials: true}
+      )
+
+      if(res.data.success === false) {
+        toast.error(res.data.message)
+        console.log(res.data.message);
+      }
+
+      toast.success(res.data.message)
+      getAllNotes()
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message)
+    }
+  }
+
   return (
     
     <>
-    <NavBar userInfo={userInfo}/>
+    <NavBar userInfo={userInfo} onSearchNote={onSearchNote} handleClearSearch={handleClearSearch} />
     <div className="container mx-auto">
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-8
-      max-md:m-5">
-        {allNotes.map((note, index) => (
-          <NoteCard
-          key={note._id}
-            title={note.title}
-            date={note.createdAt}
-            content={note.content}
-            tags={note.tags}
-            isPinned={note.isPinned}
-            onEdit={() => {}}
-            onDelete={() => {}}
-            onPinNote={() => {}}
-            />
-
-        ))}
-        
-      </div>
+      {allNotes.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-8
+        max-md:m-5">
+          {allNotes.map((note, index) => (
+            <NoteCard
+            key={note._id}
+              title={note.title}
+              date={note.createdAt}
+              content={note.content}
+              tags={note.tags}
+              isPinned={note.isPinned}
+              onEdit={() => {
+                handleEdit(note)
+              }}
+              onDelete={() => {
+                deleteNote(note)
+              }}
+              onPinNote={() => {
+                updateIsPinned(note)
+              }}
+              />
+  
+          ))}
+          
+        </div>
+      ) : (
+        <EmptyCard imgSrc={isSearch ? "https://tse2.mm.bing.net/th?id=OIP.QW8lOglqmrGmsqdWZna0OwHaCo&pid=Api&P=0&h=180" : "https://cdn.pixabay.com/animation/2022/08/22/04/37/04-37-52-465_512.gif"} message={isSearch ? "Oops! No Notes found matching your search" : `Rady to capture your ideas? Click the 'Add' button to start noting down your thoughts, inspiration and reminders. Let's get started!`} />
+      )}
     </div>
 
     <button className="w-16 h-16 flex items-center justify-center rounded-2xl bg-red-600 
@@ -102,7 +186,8 @@ const Home = () => {
           setOpenAddEditModal({ isShown: false, type: "add", data: null })
         }
         noteData={openAddEditModal.data}
-        type={openAddEditModal.type} 
+        type={openAddEditModal.type}
+        getAllNotes={getAllNotes}
       />
     </Modal>
     </>

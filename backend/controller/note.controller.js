@@ -11,7 +11,7 @@ export const addNote = async (req, res, next) => {
     }
 
     if(!content) {
-        return next(errorHandler(400, "Title is required"))
+        return next(errorHandler(400, "Content is required"))
     }
 
     try {
@@ -139,6 +139,32 @@ export const updateNotePinned = async (req, res, next) => {
             success: true,
             message: "Note update successfully",
             note,
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const searchNote = async(req, res, next) => {
+    const {query} = req.query
+
+    if(!query){
+        return next(errorHandler(400, "Search query is required"))
+    }
+
+    try {
+        const matchingNotes = await Note.find({
+            userId: req.user.id,
+            $or: [
+                { title: { $regex: new RegExp(query, "i") }},
+                { content: { $regex: new RegExp(query, "i") }},
+            ],
+        })
+
+        res.status(200).json({
+            success: true,
+            message: "Notes matching the search query retrieved successfully",
+            notes: matchingNotes
         })
     } catch (error) {
         next(error)
