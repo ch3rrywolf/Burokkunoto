@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
 import PasswordInput from '../../components/Input/PasswordInput'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { validateEmail } from '../../utils/helper'
+import axios from 'axios'
 
 const Signup = () => {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
+
+  const navigate = useNavigate()
 
   const handleSignUp = async (e) => {
     e.preventDefault()
@@ -27,9 +30,30 @@ const Signup = () => {
       return
     }
 
-    setError("")
+    
 
     // Sign Up Api
+
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/auth/signup",
+        {username: name, email, password},
+        { withCrededentials: true}
+      )
+
+      if(res.data.success === false){
+        setError(res.data.message)
+        return
+      }
+
+      setError("")
+      
+      navigate("/login")
+    } catch (error) {
+      console.log(error.message)
+      setError(error.message)
+    }
+
   }
 
 
