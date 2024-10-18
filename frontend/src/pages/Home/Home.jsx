@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import NavBar from "../../components/NavBar"
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import EmptyCard from '../../components/EmptyCard/EmptyCard'
 
 const Home = () => {
   const { currentUser, loading, errorDispatch } = useSelector(
@@ -82,28 +83,32 @@ const Home = () => {
     <>
     <NavBar userInfo={userInfo}/>
     <div className="container mx-auto">
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-8
-      max-md:m-5">
-        {allNotes.map((note, index) => (
-          <NoteCard
-          key={note._id}
-            title={note.title}
-            date={note.createdAt}
-            content={note.content}
-            tags={note.tags}
-            isPinned={note.isPinned}
-            onEdit={() => {
-              handleEdit(note)
-            }}
-            onDelete={() => {
-              deleteNote(note)
-            }}
-            onPinNote={() => {}}
-            />
-
-        ))}
-        
-      </div>
+      {allNotes.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-8
+        max-md:m-5">
+          {allNotes.map((note, index) => (
+            <NoteCard
+            key={note._id}
+              title={note.title}
+              date={note.createdAt}
+              content={note.content}
+              tags={note.tags}
+              isPinned={note.isPinned}
+              onEdit={() => {
+                handleEdit(note)
+              }}
+              onDelete={() => {
+                deleteNote(note)
+              }}
+              onPinNote={() => {}}
+              />
+  
+          ))}
+          
+        </div>
+      ) : (
+        <EmptyCard imgSrc={"https://cdn.pixabay.com/animation/2022/08/22/04/37/04-37-52-465_512.gif"} message={`Rady to capture your ideas? Click the 'Add' button to start noting down your thoughts, inspiration and reminders. Let's get started!`} />
+      )}
     </div>
 
     <button className="w-16 h-16 flex items-center justify-center rounded-2xl bg-red-600 
