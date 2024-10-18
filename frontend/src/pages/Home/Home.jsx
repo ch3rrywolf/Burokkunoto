@@ -18,6 +18,8 @@ const Home = () => {
   const [userInfo, setUserInfo] = useState(null)
   const [allNotes, setAllNotes] = useState([])
 
+  const [isSearch, setIsSearch] = useState(false)
+
   const navigate = useNavigate()
 
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -78,10 +80,33 @@ const Home = () => {
     }
   }
 
+  const onSearchNote = async (query) => {
+    try {
+      const res = await axios.get("http://localhost:3000/api/note/search",
+        {params: {query}, withCredentials: true}
+      )
+
+      if(res.data.success === false){
+        console.log(res.data.message)
+        toast.error(res.data.message)
+        return
+      }
+
+      setIsSearch(true)
+      setAllNotes(res.data.notes)
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+  const handleClearSearch =  () => {
+    setIsSearch(false)
+    getAllNotes()
+  }
+
   return (
     
     <>
-    <NavBar userInfo={userInfo}/>
+    <NavBar userInfo={userInfo} onSearchNote={onSearchNote} handleClearSearch={handleClearSearch} />
     <div className="container mx-auto">
       {allNotes.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-8
@@ -107,7 +132,7 @@ const Home = () => {
           
         </div>
       ) : (
-        <EmptyCard imgSrc={"https://cdn.pixabay.com/animation/2022/08/22/04/37/04-37-52-465_512.gif"} message={`Rady to capture your ideas? Click the 'Add' button to start noting down your thoughts, inspiration and reminders. Let's get started!`} />
+        <EmptyCard imgSrc={isSearch ? "https://tse2.mm.bing.net/th?id=OIP.QW8lOglqmrGmsqdWZna0OwHaCo&pid=Api&P=0&h=180" : "https://cdn.pixabay.com/animation/2022/08/22/04/37/04-37-52-465_512.gif"} message={isSearch ? "Oops! No Notes found matching your search" : `Rady to capture your ideas? Click the 'Add' button to start noting down your thoughts, inspiration and reminders. Let's get started!`} />
       )}
     </div>
 
