@@ -102,7 +102,8 @@ const Home = () => {
           setOpenAddEditModal({ isShown: false, type: "add", data: null })
         }
         noteData={openAddEditModal.data}
-        type={openAddEditModal.type} 
+        type={openAddEditModal.type}
+        getAllNotes={getAllNotes}
       />
     </Modal>
     </>
