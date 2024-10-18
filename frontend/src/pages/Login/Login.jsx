@@ -11,7 +11,7 @@ const Login = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
-  
+
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -30,8 +30,7 @@ const Login = () => {
 
     setError("")
 
-    // Login Api :>
-
+    // Login API call
     try {
       dispatch(signInStart())
 
@@ -41,10 +40,11 @@ const Login = () => {
         {withCredentials: true}
       )
 
-      if(res.data.success === false) {
+      if (res.data.success === false) {
         toast.error(res.data.message)
         console.log(res.data);
-        dispatch(signInFailure(data.message))
+        dispatch(signInFailure(res.data.message))
+        return
       }
 
       toast.success(res.data.message)
@@ -58,33 +58,33 @@ const Login = () => {
     }
   }
 
-
   return (
-    <div className="flex items-center justify-center mt-28">
-      <div className="w-96 border rounded-full bg-red-600 px-7 py-10">
-        <form onSubmit={handleLogin}>
-          <h4 className="text-2xl mb-7 px-32 py-5 text-white ">Login</h4>
+    <div className="flex items-center justify-center h-screen ">
+      {/* Circular form container */}
+      <div className="w-96 h-96 rounded-full bg-red-600 flex items-center justify-center p-7">
+        <form onSubmit={handleLogin} className="w-full text-center">
+          <h2 className="text-2xl mb-7 text-black">ログイン</h2>
           <input 
             type="text" 
-            placeholder="Email" 
-            className="input-box" 
+            placeholder="電子メール" 
+            className="w-full bg-red-600 mb-4 px-4 py-2 text-sm text-white rounded-lg focus:outline-none "
             value={email} 
             onChange={(e) => setEmail(e.target.value)} 
-
           />
-          <PasswordInput value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          <PasswordInput 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
+          {error && <p className="text-white text-sm pb-1">{error}</p>}
 
-          {error && <p className="text-red-700 text-sm pb-1">{error}</p>}
-
-          <button type="submit" className="btn-primary">
-            Login
+          <button type="submit" className="w-full bg-red-600 text-red-600 font-semibold py-2 rounded-lg hover:bg-white focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50">
+          ログイン
           </button>
-          <p className="text-sm text-center mt-4 text-white">
-            Not registred yet?{" "}
+          <p className="text-sm mt-4 text-white">
+          まだ登録されていません ?{" "}
             <Link to={"/signup"} className="font-medium text-[#2B8] underline">
-            Create an account</Link>
+            アカウントを作成する
+            </Link>
           </p>
         </form>
       </div>

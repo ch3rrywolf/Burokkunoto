@@ -8,17 +8,17 @@ const PasswordInput = ({ value, onChange, placeholder }) => {
     setIsShowPassword(!isShowPassword)
   }
   return (
-    <div className="flex items-center bg-transparent border-[1.5px] px-5 rounded mb-3">
+    <div className="flex items-center bg-transparent px-4 rounded mb-3 focus:outline-none ">
       <input
         value={value}
         onChange={onChange}
         type={isShowPassword ? "text" : "password"}
-        placeholder={placeholder || "Password"}
-        className="w-full text-sm bg-transparent py-3 mr-3 rounded outline-none"
+        placeholder={placeholder || "パスワード"}
+        className="w-full text-white text-sm bg-transparent py-2 mr-3 rounded-lg focus:outline-none"
       />
 
       {isShowPassword ? (
-        <FaRegEye size={22} className="text-[#2B85FF] cursor-pointer" onClick={() => toggleShowPassword()} />
+        <FaRegEye size={22} className="text-white cursor-pointer" onClick={() => toggleShowPassword()} />
       ) : (
         <FaRegEyeSlash size={22} className="text-slate-400 cursor-pointer" onClick={() => toggleShowPassword()} />
       
